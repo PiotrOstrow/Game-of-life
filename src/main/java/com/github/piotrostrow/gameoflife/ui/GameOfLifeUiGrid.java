@@ -8,21 +8,20 @@ public class GameOfLifeUiGrid extends GridPane {
 
 	private final GridCell[][] gridCells;
 
-	public GameOfLifeUiGrid(int width, int height) {
-		if(width < 0 || height < 0)
-			throw new IllegalArgumentException("Grid dimensions must be positive");
-
-		this.gridCells = new GridCell[width][height];
+	public GameOfLifeUiGrid(GameOfLife gameOfLife) {
+		this.gridCells = new GridCell[gameOfLife.getWidth()][gameOfLife.getHeight()];
 
 		setAlignment(Pos.CENTER);
 		setHgap(1);
 		setVgap(1);
 
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		for(int x = 0; x < gameOfLife.getWidth(); x++) {
+			for(int y = 0; y < gameOfLife.getHeight(); y++) {
 				addGridCell(new GridCell(), x, y);
 			}
 		}
+
+		update(gameOfLife);
 	}
 
 	public void addGridCell(GridCell gridCell, int columnIndex, int rowIndex) {

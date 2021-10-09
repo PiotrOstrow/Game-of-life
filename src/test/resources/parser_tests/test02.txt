@@ -1,0 +1,13 @@
+Test case, rows that start with anything but alive or dead characters (dot or star) should be ignored,
+except for when the row starts with whitespace
+
+
+*...
+ ...
+e.**. this one should be ignored
+,**.*
+.*..
+---*
+    .***
+..*.
+...*

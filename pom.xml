@@ -57,6 +57,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.21.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -80,7 +86,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.github.piotrostrow.gameoflife/com.github.piotrostrow.gameoflife.HelloApplication
+                                com.github.piotrostrow.gameoflife/com.github.piotrostrow.gameoflife.Application
                             </mainClass>
                         </configuration>
                     </execution>
