@@ -12,8 +12,8 @@ public class Parser {
 
 	private static final Pattern pattern = Pattern.compile("^\\s*(?<row>[.*]+).*$", Pattern.MULTILINE);
 
-	private static final char ALIVE = '*';
-	private static final char DEAD = '.';
+	public static final char ALIVE = '*';
+	public static final char DEAD = '.';
 
 	private final String input;
 	private final List<String> rows = new ArrayList<>();
@@ -23,7 +23,14 @@ public class Parser {
 		this.input = input;
 	}
 
+	/**
+	 * @throws IllegalArgumentException if the input string has no valid rows
+	 */
 	public GameOfLife parse() {
+		if (rows.size() != 0) {
+			throw new IllegalStateException("Input has already been parsed");
+		}
+
 		extractRows();
 		constructGame();
 		parseRows();
@@ -34,8 +41,12 @@ public class Parser {
 	private void extractRows() {
 		Matcher matcher = pattern.matcher(input);
 
-		while(matcher.find()) {
+		while (matcher.find()) {
 			rows.add(matcher.group("row"));
+		}
+
+		if (rows.size() == 0) {
+			throw new IllegalArgumentException("Input has no valid rows");
 		}
 	}
 
@@ -50,9 +61,9 @@ public class Parser {
 	}
 
 	private void parseRows() {
-		for(int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+		for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
 			String row = rows.get(rowIndex);
-			for(int columnIndex = 0; columnIndex < row.length(); columnIndex++) {
+			for (int columnIndex = 0; columnIndex < row.length(); columnIndex++) {
 				char character = row.charAt(columnIndex);
 				gameOfLife.setCell(columnIndex, rowIndex, character == ALIVE);
 			}

@@ -6,16 +6,29 @@ import javafx.scene.layout.GridPane;
 
 public class GameOfLifeUiGrid extends GridPane {
 
-	private final GameOfLife gameOfLife;
-	private final GridCell[][] gridCells;
+	private GameOfLife gameOfLife;
+	private GridCell[][] gridCells;
 
 	public GameOfLifeUiGrid(GameOfLife gameOfLife) {
-		this.gameOfLife = gameOfLife;
-		this.gridCells = new GridCell[gameOfLife.getWidth()][gameOfLife.getHeight()];
-
 		setAlignment(Pos.CENTER);
 		setHgap(1);
 		setVgap(1);
+
+		setGame(gameOfLife);
+
+		update();
+	}
+
+	public void addGridCell(GridCell gridCell, int columnIndex, int rowIndex) {
+		super.add(gridCell, columnIndex, rowIndex);
+		gridCells[columnIndex][rowIndex] = gridCell;
+	}
+
+	public void setGame(GameOfLife gameOfLife) {
+		this.gameOfLife = gameOfLife;
+		this.gridCells = new GridCell[gameOfLife.getWidth()][gameOfLife.getHeight()];
+
+		getChildren().clear();
 
 		for(int x = 0; x < gameOfLife.getWidth(); x++) {
 			for(int y = 0; y < gameOfLife.getHeight(); y++) {
@@ -25,15 +38,10 @@ public class GameOfLifeUiGrid extends GridPane {
 			}
 		}
 
-		update(gameOfLife);
+		update();
 	}
 
-	public void addGridCell(GridCell gridCell, int columnIndex, int rowIndex) {
-		super.add(gridCell, columnIndex, rowIndex);
-		gridCells[columnIndex][rowIndex] = gridCell;
-	}
-
-	public void update(GameOfLife gameOfLife) {
+	public void update() {
 		for(int x = 0; x < getGridWidth(); x++) {
 			for(int y = 0; y < getGridHeight(); y++) {
 				gridCells[x][y].setAlive(gameOfLife.isCellAlive(x, y));

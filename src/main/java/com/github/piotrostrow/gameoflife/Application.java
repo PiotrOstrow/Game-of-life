@@ -1,18 +1,21 @@
 package com.github.piotrostrow.gameoflife;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
-import com.github.piotrostrow.gameoflife.io.FileLoader;
+import com.github.piotrostrow.gameoflife.io.FileUtils;
 import com.github.piotrostrow.gameoflife.ui.GameOfLifeUiGrid;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 public class Application extends javafx.application.Application {
 
@@ -29,29 +32,72 @@ public class Application extends javafx.application.Application {
 		grid.setPadding(new Insets(20));
 		grid.setAlignment(Pos.CENTER);
 
-		GameOfLife gameOfLife = FileLoader.load(new File("test01.txt"));
+		GameOfLife gameOfLife = FileUtils.load(new File("test01.txt"));
 
 		GameOfLifeUiGrid gameGrid = new GameOfLifeUiGrid(gameOfLife);
 		Button nextGenerationButton = new Button("Next generation");
+		Button loadFileButton = new Button("Load from file");
+		Button saveFileButton = new Button("Save to file");
 
 		grid.add(new Label("Game of life"), 0, 0);
 		grid.add(gameGrid, 0, 1);
 		grid.add(nextGenerationButton, 0, 2);
+		grid.add(loadFileButton, 0, 3);
+		grid.add(saveFileButton, 0, 4);
 
 		Scene scene = new Scene(grid, 1024, 720);
+		scene.getStylesheets().add(Application.class.getResource("style.css").toExternalForm());
 
 		scene.setOnKeyPressed(event -> {
-			if(event.getCode() == KeyCode.F5) {
+			if (event.getCode() == KeyCode.F5) { // for hotswap
 				constructScene(stage);
 			}
 		});
 
 		nextGenerationButton.setOnMouseClicked(event -> {
 			gameOfLife.calculateNextGeneration();
-			gameGrid.update(gameOfLife);
+			gameGrid.update();
 		});
 
-		scene.getStylesheets().add(Application.class.getResource("style.css").toExternalForm());
+		loadFileButton.setOnMouseClicked(event -> {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open save file");
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text file", "*.txt"));
+			fileChooser.setInitialDirectory(Paths.get(".").toFile());
+			File file = fileChooser.showOpenDialog(stage);
+
+			if (file != null) {
+				try {
+					GameOfLife game = FileUtils.load(file);
+					gameGrid.setGame(game);
+				} catch (RuntimeException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setContentText("Error loading the file: " + e.getMessage());
+					alert.show();
+				}
+			}
+		});
+
+		saveFileButton.setOnMouseClicked(event -> {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Save to file");
+			fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Text file", "*.txt"));
+			fileChooser.setInitialDirectory(Paths.get(".").toFile());
+			File file = fileChooser.showSaveDialog(stage);
+
+			if (file != null) {
+				try {
+					FileUtils.save(gameOfLife, file);
+				} catch (RuntimeException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setContentText("Error saving the file: " + e.getMessage());
+					alert.show();
+				}
+			}
+		});
+
 		stage.setTitle("Game of life");
 		stage.setScene(scene);
 	}

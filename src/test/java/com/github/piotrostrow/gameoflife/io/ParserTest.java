@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.github.piotrostrow.gameoflife.TestHelper.getInputFromFile;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ParserTest {
 
@@ -34,5 +35,11 @@ class ParserTest {
 
 		assertThat(actual.getWidth()).isEqualTo(20);
 		assertThat(actual.getHeight()).isEqualTo(4);
+	}
+
+	@Test
+	void testInputWithNoValidRowsShouldThrowIllegalArgumentException() {
+		Parser parser = new Parser("no valid rows here\njust some text");
+		assertThatThrownBy(parser::parse).isInstanceOf(IllegalArgumentException.class);
 	}
 }
