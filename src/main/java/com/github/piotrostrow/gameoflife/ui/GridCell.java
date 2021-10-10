@@ -4,10 +4,13 @@ import javafx.scene.layout.Region;
 
 public class GridCell extends Region {
 
+	private final int x;
+	private final int y;
 	private boolean alive;
 
-	GridCell() {
-		setOnMouseClicked(e -> toggle());
+	public GridCell(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public void setAlive(boolean alive) {
@@ -22,5 +25,17 @@ public class GridCell extends Region {
 			getStyleClass().add("alive");
 		else
 			getStyleClass().remove("alive");
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public boolean isAlive() {
+		return alive;
 	}
 }

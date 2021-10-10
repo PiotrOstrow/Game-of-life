@@ -6,9 +6,11 @@ import javafx.scene.layout.GridPane;
 
 public class GameOfLifeUiGrid extends GridPane {
 
+	private final GameOfLife gameOfLife;
 	private final GridCell[][] gridCells;
 
 	public GameOfLifeUiGrid(GameOfLife gameOfLife) {
+		this.gameOfLife = gameOfLife;
 		this.gridCells = new GridCell[gameOfLife.getWidth()][gameOfLife.getHeight()];
 
 		setAlignment(Pos.CENTER);
@@ -17,7 +19,9 @@ public class GameOfLifeUiGrid extends GridPane {
 
 		for(int x = 0; x < gameOfLife.getWidth(); x++) {
 			for(int y = 0; y < gameOfLife.getHeight(); y++) {
-				addGridCell(new GridCell(), x, y);
+				GridCell gridCell = new GridCell(x, y);
+				gridCell.setOnMouseClicked(e -> onCellClick(gridCell));
+				addGridCell(gridCell, x, y);
 			}
 		}
 
@@ -35,6 +39,11 @@ public class GameOfLifeUiGrid extends GridPane {
 				gridCells[x][y].setAlive(gameOfLife.isCellAlive(x, y));
 			}
 		}
+	}
+
+	private void onCellClick(GridCell cell) {
+		cell.toggle();
+		gameOfLife.setCell(cell.getX(), cell.getY(), cell.isAlive());
 	}
 
 	private int getGridWidth() {
