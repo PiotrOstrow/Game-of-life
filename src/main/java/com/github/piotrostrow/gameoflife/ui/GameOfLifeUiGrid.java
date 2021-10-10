@@ -61,4 +61,8 @@ public class GameOfLifeUiGrid extends GridPane {
 	private int getGridHeight() {
 		return gridCells[0].length;
 	}
+
+	public GameOfLife getGame() {
+		return gameOfLife;
+	}
 }

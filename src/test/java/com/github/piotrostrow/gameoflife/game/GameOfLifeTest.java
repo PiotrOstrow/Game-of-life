@@ -3,8 +3,8 @@ package com.github.piotrostrow.gameoflife.game;
 import com.github.piotrostrow.gameoflife.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
+import static com.github.piotrostrow.gameoflife.TestHelper.assertGridEquals;
 import static com.github.piotrostrow.gameoflife.TestHelper.getFile;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class GameOfLifeTest {
 
@@ -50,18 +50,5 @@ class GameOfLifeTest {
 
 		input.calculateNextGeneration();
 		assertGridEquals(input, expectedGen2);
-	}
-
-	private void assertGridEquals(GameOfLife actual, GameOfLife expected) {
-		assertThat(actual.getWidth()).isEqualTo(expected.getWidth());
-		assertThat(actual.getHeight()).isEqualTo(expected.getHeight());
-
-		for (int x = 0; x < actual.getWidth(); x++) {
-			for (int y = 0; y < actual.getHeight(); y++) {
-				assertThat(actual.isCellAlive(x, y))
-						.as("cell %d, %d", x, y)
-						.isEqualTo(expected.isCellAlive(x, y));
-			}
-		}
 	}
 }

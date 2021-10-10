@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -32,9 +31,7 @@ public class Application extends javafx.application.Application {
 		grid.setPadding(new Insets(20));
 		grid.setAlignment(Pos.CENTER);
 
-		GameOfLife gameOfLife = FileUtils.load(new File("test01.txt"));
-
-		GameOfLifeUiGrid gameGrid = new GameOfLifeUiGrid(gameOfLife);
+		GameOfLifeUiGrid gameGrid = new GameOfLifeUiGrid(FileUtils.load(new File("test01.txt")));
 		Button nextGenerationButton = new Button("Next generation");
 		Button loadFileButton = new Button("Load from file");
 		Button saveFileButton = new Button("Save to file");
@@ -48,14 +45,8 @@ public class Application extends javafx.application.Application {
 		Scene scene = new Scene(grid, 1024, 720);
 		scene.getStylesheets().add(Application.class.getResource("style.css").toExternalForm());
 
-		scene.setOnKeyPressed(event -> {
-			if (event.getCode() == KeyCode.F5) { // for hotswap
-				constructScene(stage);
-			}
-		});
-
 		nextGenerationButton.setOnMouseClicked(event -> {
-			gameOfLife.calculateNextGeneration();
+			gameGrid.getGame().calculateNextGeneration();
 			gameGrid.update();
 		});
 
@@ -88,7 +79,7 @@ public class Application extends javafx.application.Application {
 
 			if (file != null) {
 				try {
-					FileUtils.save(gameOfLife, file);
+					FileUtils.save(gameGrid.getGame(), file);
 				} catch (RuntimeException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle("Error");
