@@ -31,7 +31,7 @@ public class Application extends javafx.application.Application {
 		grid.setPadding(new Insets(20));
 		grid.setAlignment(Pos.CENTER);
 
-		GameOfLifeUiGrid gameGrid = new GameOfLifeUiGrid(FileUtils.load(new File("test01.txt")));
+		GameOfLifeUiGrid gameGrid = new GameOfLifeUiGrid(FileUtils.load(new File("acorn.txt")));
 		Button nextGenerationButton = new Button("Next generation");
 		Button loadFileButton = new Button("Load from file");
 		Button saveFileButton = new Button("Save to file");

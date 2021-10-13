@@ -51,4 +51,17 @@ class GameOfLifeTest {
 		input.calculateNextGeneration();
 		assertGridEquals(input, expectedGen2);
 	}
+
+	@Test
+	void testThreeCellOscillatingLineOnEdgeShouldDieInTwoGenerations() {
+		GameOfLife input = FileUtils.load(getFile("game_tests/test_three_cell_line_edge_input.txt"));
+		GameOfLife expectedGen1 = FileUtils.load(getFile("game_tests/test_three_cell_line_edge_gen01.txt"));
+		GameOfLife expectedGen2 = FileUtils.load(getFile("game_tests/test_three_cell_line_edge_gen02.txt"));
+
+		input.calculateNextGeneration();
+		assertGridEquals(input, expectedGen1);
+
+		input.calculateNextGeneration();
+		assertGridEquals(input, expectedGen2);
+	}
 }
