@@ -24,12 +24,20 @@ public class GameOfLife {
 	public void calculateNextGeneration() {
 		for(int x = 0; x < getWidth(); x++) {
 			for(int y = 0; y < getHeight(); y++) {
-				int neighbourCount = getNeighbourCount(x, y);
-				setNextGenCell(x, y, neighbourCount);
+				calculateNextGenCell(x, y);
 			}
 		}
 
 		swapGrids();
+	}
+
+	private void calculateNextGenCell(int x, int y) {
+		int neighbourCount = getNeighbourCount(x, y);
+		if(isCellAlive(x, y)) {
+			nextGenGrid[x][y] = neighbourCount == 2 || neighbourCount == 3;
+		} else {
+			nextGenGrid[x][y] = neighbourCount == 3;
+		}
 	}
 
 	private int getNeighbourCount(int x, int y) {
@@ -44,14 +52,6 @@ public class GameOfLife {
 		}
 
 		return neighbourCount;
-	}
-
-	private void setNextGenCell(int x, int y, int neighbourCount) {
-		if(isCellAlive(x, y)) {
-			nextGenGrid[x][y] = neighbourCount == 2 || neighbourCount == 3;
-		} else {
-			nextGenGrid[x][y] = neighbourCount == 3;
-		}
 	}
 
 	private void swapGrids() {
