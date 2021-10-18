@@ -1,11 +1,4 @@
-GridPane {
-
-    /*-fx-grid-lines-visible: true;*/
-    /*-fx-vgap: 10px;*/
-    /*-fx-hgap: 10px;*/
-}
-
-GridCell {
+Region {
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
 

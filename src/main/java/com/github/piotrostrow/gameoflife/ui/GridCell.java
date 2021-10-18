@@ -1,8 +1,11 @@
 package com.github.piotrostrow.gameoflife.ui;
 
+import javafx.scene.Node;
 import javafx.scene.layout.Region;
 
-public class GridCell extends Region {
+public class GridCell {
+
+	private final Region region;
 
 	private final int x;
 	private final int y;
@@ -11,6 +14,7 @@ public class GridCell extends Region {
 	public GridCell(int x, int y) {
 		this.x = x;
 		this.y = y;
+		this.region = new Region();
 	}
 
 	public void setAlive(boolean alive) {
@@ -22,9 +26,9 @@ public class GridCell extends Region {
 		alive = !alive;
 
 		if(alive)
-			getStyleClass().add("alive");
+			region.getStyleClass().add("alive");
 		else
-			getStyleClass().remove("alive");
+			region.getStyleClass().remove("alive");
 	}
 
 	public int getX() {
@@ -37,5 +41,9 @@ public class GridCell extends Region {
 
 	public boolean isAlive() {
 		return alive;
+	}
+
+	Node asNode() {
+		return region;
 	}
 }

@@ -9,6 +9,10 @@ import java.nio.file.StandardOpenOption;
 
 public class FileUtils {
 
+	public static GameOfLife load(String path) {
+		return load(new File(path));
+	}
+
 	public static GameOfLife load(File file) {
 		try {
 			String input = Files.readString(file.toPath());

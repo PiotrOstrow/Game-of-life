@@ -1,9 +1,17 @@
 package com.github.piotrostrow.gameoflife.game;
 
+import java.util.Arrays;
+
 public class GameOfLife {
+
+	public interface Listener {
+		void update();
+	}
 
 	private boolean[][] grid;
 	private boolean[][] nextGenGrid;
+
+	private Listener listener;
 
 	public GameOfLife(int width, int height) {
 		if(width < 1 || height < 1)
@@ -11,6 +19,13 @@ public class GameOfLife {
 
 		this.grid = new boolean[width][height];
 		this.nextGenGrid = new boolean[width][height];
+	}
+
+	public void setCells(GameOfLife other) {
+		this.grid = Arrays.stream(other.grid).map(boolean[]::clone).toArray(boolean[][]::new);
+
+		if(listener != null)
+			listener.update();
 	}
 
 	public void setCell(int x, int y, boolean alive) {
@@ -29,6 +44,9 @@ public class GameOfLife {
 		}
 
 		swapGrids();
+
+		if(listener != null)
+			listener.update();
 	}
 
 	private void calculateNextGenCell(int x, int y) {
@@ -66,5 +84,9 @@ public class GameOfLife {
 
 	public int getHeight() {
 		return grid[0].length;
+	}
+
+	public void setListener(Listener listener) {
+		this.listener = listener;
 	}
 }
