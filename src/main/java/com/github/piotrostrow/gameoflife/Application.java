@@ -15,8 +15,10 @@ public class Application extends javafx.application.Application {
 	@Override
 	public void start(Stage stage) {
 		final GameOfLife model = FileUtils.load("acorn.txt");
-		final Controller controller = new Controller(stage, model);
-		final GameView view = new GameView(model, controller);
+		final GameView view = new GameView(model);
+		final Controller controller = new Controller(stage, model, view);
+
+		view.setupController(controller);
 
 		final Scene scene = new Scene(view.asParent(), 1024, 720);
 		addCss(scene);

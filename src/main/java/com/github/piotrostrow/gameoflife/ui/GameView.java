@@ -21,9 +21,8 @@ public class GameView {
 
 	private Slider speedSlider;
 
-	public GameView(GameOfLife game, Controller controller) {
+	public GameView(GameOfLife game) {
 		initView(game);
-		setupController(controller);
 	}
 
 	private void initView(GameOfLife game) {
@@ -40,7 +39,7 @@ public class GameView {
 		saveFileButton = new Button("Save to file");
 		playButton = new Button("Play");
 
-		speedSlider = new Slider(1, 120, 1);
+		speedSlider = new Slider(1, 60, 1);
 
 		parent.add(new Label("Game of life"), 0, 0);
 		parent.add(gridView.asNode(), 0, 1);
@@ -51,10 +50,20 @@ public class GameView {
 		parent.add(speedSlider, 0, 6);
 	}
 
-	private void setupController(Controller controller) {
+	public void setupController(Controller controller) {
 		nextGenerationButton.setOnAction(controller::onNextGen);
 		loadFileButton.setOnAction(controller::onLoadGame);
 		saveFileButton.setOnAction(controller::onSaveGame);
+		playButton.setOnAction(controller::onPlay);
+		speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> controller.onChangeSpeed(newValue));
+	}
+
+	public void togglePlayButton() {
+		if (playButton.getText().equalsIgnoreCase("Play")) {
+			playButton.setText("Pause");
+		} else {
+			playButton.setText("Play");
+		}
 	}
 
 	public Parent asParent() {

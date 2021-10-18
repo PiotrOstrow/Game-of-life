@@ -2,23 +2,34 @@ package com.github.piotrostrow.gameoflife.controller;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import com.github.piotrostrow.gameoflife.io.FileUtils;
+import com.github.piotrostrow.gameoflife.ui.GameView;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.nio.file.Paths;
 
 public class Controller {
 
-	private final GameOfLife gameOfLife;
-
 	private final Stage stage;
+	private final GameOfLife gameOfLife;
+	private final GameView gameView;
 
-	public Controller(Stage stage, GameOfLife gameOfLife) {
-		this.gameOfLife = gameOfLife;
+	private final Timeline autoPlayTimeline;
+
+	public Controller(Stage stage, GameOfLife gameOfLife, GameView gameView) {
 		this.stage = stage;
+		this.gameOfLife = gameOfLife;
+		this.gameView = gameView;
+
+		this.autoPlayTimeline = new Timeline(new KeyFrame(Duration.millis(500), e -> gameOfLife.calculateNextGeneration()));
+		this.autoPlayTimeline.setCycleCount(Timeline.INDEFINITE);
 	}
 
 	public void onNextGen(ActionEvent actionEvent) {
@@ -26,41 +37,67 @@ public class Controller {
 	}
 
 	public void onLoadGame(ActionEvent actionEvent) {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open save file");
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text file", "*.txt"));
-		fileChooser.setInitialDirectory(Paths.get(".").toFile());
-		File file = fileChooser.showOpenDialog(stage);
+		pauseIfAutoPlaying();
+
+		File file = newFileChooser("Open save file").showOpenDialog(stage);
 
 		if (file != null) {
 			try {
-				GameOfLife game = FileUtils.load(file);
-				gameOfLife.setCells(game);
+				GameOfLife loadedGame = FileUtils.load(file);
+				gameOfLife.setCells(loadedGame);
 			} catch (RuntimeException e) {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Error");
-				alert.setContentText("Error loading the file: " + e.getMessage());
-				alert.show();
+				showErrorAlert("Error loading the file: " + e.getMessage());
 			}
 		}
 	}
 
 	public void onSaveGame(ActionEvent actionEvent) {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Save to file");
-		fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Text file", "*.txt"));
-		fileChooser.setInitialDirectory(Paths.get(".").toFile());
-		File file = fileChooser.showSaveDialog(stage);
+		pauseIfAutoPlaying();
+
+		File file = newFileChooser("Save to file").showSaveDialog(stage);
 
 		if (file != null) {
 			try {
 				FileUtils.save(gameOfLife, file);
 			} catch (RuntimeException e) {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Error");
-				alert.setContentText("Error saving the file: " + e.getMessage());
-				alert.show();
+				showErrorAlert("Error saving the file: " + e.getMessage());
 			}
 		}
+	}
+
+	private void pauseIfAutoPlaying() {
+		if(autoPlayTimeline.getStatus() == Animation.Status.RUNNING) {
+			autoPlayTimeline.stop();
+			gameView.togglePlayButton();
+		}
+	}
+
+	private FileChooser newFileChooser(String title) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text file", "*.txt"));
+		fileChooser.setInitialDirectory(Paths.get(".").toFile());
+		fileChooser.setTitle(title);
+		return fileChooser;
+	}
+
+	private void showErrorAlert(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setContentText(message);
+		alert.show();
+	}
+
+	public void onPlay(ActionEvent actionEvent) {
+		if(autoPlayTimeline.getStatus() != Animation.Status.RUNNING) {
+			autoPlayTimeline.play();
+		} else {
+			autoPlayTimeline.stop();
+		}
+
+		gameView.togglePlayButton();
+	}
+
+	public void onChangeSpeed(Number value) {
+		autoPlayTimeline.setRate(value.doubleValue());
 	}
 }
