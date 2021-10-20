@@ -3,7 +3,6 @@ package com.github.piotrostrow.gameoflife.io;
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +16,7 @@ public class Parser {
 
 	private final String input;
 	private final List<String> rows = new ArrayList<>();
-	private GameOfLife gameOfLife;
+	private final GameOfLife gameOfLife = new GameOfLife();
 
 	public Parser(String input) {
 		this.input = input;
@@ -32,7 +31,6 @@ public class Parser {
 		}
 
 		extractRows();
-		constructGame();
 		parseRows();
 
 		return gameOfLife;
@@ -48,16 +46,6 @@ public class Parser {
 		if (rows.size() == 0) {
 			throw new IllegalArgumentException("Input has no valid rows");
 		}
-	}
-
-	private void constructGame() {
-		int height = rows.size();
-		int width = rows.stream()
-				.map(String::length)
-				.max(Comparator.naturalOrder())
-				.orElse(1);
-
-		gameOfLife = new GameOfLife(width, height);
 	}
 
 	private void parseRows() {

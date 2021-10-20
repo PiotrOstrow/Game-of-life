@@ -1,67 +1,66 @@
 package com.github.piotrostrow.gameoflife.game;
 
-import com.github.piotrostrow.gameoflife.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import static com.github.piotrostrow.gameoflife.TestHelper.assertGridEquals;
-import static com.github.piotrostrow.gameoflife.TestHelper.getFile;
+import static com.github.piotrostrow.gameoflife.TestHelper.loadFromFile;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 class GameOfLifeTest {
 
 	@Test
-	void testThreeCellLineShouldOscillate() {
-		GameOfLife input = FileUtils.load(getFile("game_tests/test_three_cell_line_input.txt"));
-		GameOfLife expected = FileUtils.load(getFile("game_tests/test_three_cell_line_expected.txt"));
+	void testAliveCellWithThreeNeighboursShouldStayAlive() {
+		GameOfLife actual = loadFromFile("game_tests/test_alive_with_three_neighbours.txt");
 
-		input.calculateNextGeneration();
-		assertGridEquals(input, expected);
-
-		input.calculateNextGeneration();
-		input.calculateNextGeneration();
-		assertGridEquals(input, expected);
+		actual.calculateNextGeneration();
+		assertThat(actual.isCellAlive(3, 1)).isTrue();
 	}
 
 	@Test
-	void testUnderpopulatedAllShouldDieInNextGeneration() {
-		GameOfLife input = FileUtils.load(getFile("game_tests/test_underpopulated_input.txt"));
-		GameOfLife expected = FileUtils.load(getFile("game_tests/test_underpopulated_expected.txt"));
+	void testDeadCellWithThreeNeighboursShouldBecomeAlive() {
+		GameOfLife actual = loadFromFile("game_tests/test_dead_cell_with_three_neighbours_gen00.txt");
+		GameOfLife expectedGen1 = loadFromFile("game_tests/test_dead_cell_with_three_neighbours_gen01.txt");
 
-		input.calculateNextGeneration();
-		assertGridEquals(input, expected);
+		actual.calculateNextGeneration();
+		assertThat(actual.getAliveCells()).isEqualTo(expectedGen1.getAliveCells());
+	}
+
+	@Test
+	void testAliveCellsWithMoreThanThreeNeighboursShouldDie() {
+		GameOfLife actual = loadFromFile("game_tests/test_alive_with_more_than_three_neighbours.txt");
+
+		actual.calculateNextGeneration();
+		assertThat(actual.isCellAlive(1, 1)).isFalse();
+	}
+
+	@Test
+	void testThreeCellLineShouldOscillate() {
+		GameOfLife actual = loadFromFile("game_tests/test_three_cell_line_input.txt");
+		GameOfLife expected = loadFromFile("game_tests/test_three_cell_line_expected.txt");
+
+		actual.calculateNextGeneration();
+		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
+
+		actual.calculateNextGeneration();
+		actual.calculateNextGeneration();
+		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
+	}
+
+	@Test
+	void testUnderpopulatedCellsAllShouldDieInNextGeneration() {
+		GameOfLife actual = loadFromFile("game_tests/test_underpopulated_input.txt");
+		GameOfLife expected = loadFromFile("game_tests/test_underpopulated_expected.txt");
+
+		actual.calculateNextGeneration();
+		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
 	}
 
 	@Test
 	void testEmptyGridShouldNotSpawnAnyCells() {
-		GameOfLife input = FileUtils.load(getFile("game_tests/test_empty_grid.txt"));
-		GameOfLife expected = FileUtils.load(getFile("game_tests/test_empty_grid.txt"));
+		GameOfLife actual = loadFromFile("game_tests/test_empty_grid.txt");
+		GameOfLife expected = loadFromFile("game_tests/test_empty_grid.txt");
 
-		input.calculateNextGeneration();
-		assertGridEquals(input, expected);
-	}
-
-	@Test
-	void testOverpopulatedAllCellsShouldDieInTwoGenerations() {
-		GameOfLife input = FileUtils.load(getFile("game_tests/test_overpopulated_input.txt"));
-		GameOfLife expectedGen1 = FileUtils.load(getFile("game_tests/test_overpopulated_expected_gen01.txt"));
-		GameOfLife expectedGen2 = FileUtils.load(getFile("game_tests/test_overpopulated_expected_gen02.txt"));
-
-		input.calculateNextGeneration();
-		assertGridEquals(input, expectedGen1);
-
-		input.calculateNextGeneration();
-		assertGridEquals(input, expectedGen2);
-	}
-
-	@Test
-	void testThreeCellOscillatingLineOnEdgeShouldDieInTwoGenerations() {
-		GameOfLife input = FileUtils.load(getFile("game_tests/test_three_cell_line_edge_input.txt"));
-		GameOfLife expectedGen1 = FileUtils.load(getFile("game_tests/test_three_cell_line_edge_gen01.txt"));
-		GameOfLife expectedGen2 = FileUtils.load(getFile("game_tests/test_three_cell_line_edge_gen02.txt"));
-
-		input.calculateNextGeneration();
-		assertGridEquals(input, expectedGen1);
-
-		input.calculateNextGeneration();
-		assertGridEquals(input, expectedGen2);
+		actual.calculateNextGeneration();
+		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
 	}
 }

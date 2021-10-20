@@ -1,92 +1,100 @@
 package com.github.piotrostrow.gameoflife.game;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class GameOfLife {
 
 	public interface Listener {
 		void update();
 	}
-
-	private boolean[][] grid;
-	private boolean[][] nextGenGrid;
+	private final Grid grid;
 
 	private Listener listener;
 
-	public GameOfLife(int width, int height) {
-		if(width < 1 || height < 1)
-			throw new IllegalArgumentException("Grid area must be positive");
-
-		this.grid = new boolean[width][height];
-		this.nextGenGrid = new boolean[width][height];
+	public GameOfLife() {
+		this.grid = new Grid();
 	}
 
 	public void setCells(GameOfLife other) {
-		this.grid = Arrays.stream(other.grid).map(boolean[]::clone).toArray(boolean[][]::new);
+		this.grid.set(other.grid);
 
 		if(listener != null)
 			listener.update();
 	}
 
 	public void setCell(int x, int y, boolean alive) {
-		grid[x][y] = alive;
+		grid.set(x, y, alive);
 	}
 
 	public boolean isCellAlive(int x, int y) {
-		return grid[x][y];
+		return grid.get(x, y);
 	}
 
 	public void calculateNextGeneration() {
-		for(int x = 0; x < getWidth(); x++) {
-			for(int y = 0; y < getHeight(); y++) {
-				calculateNextGenCell(x, y);
-			}
-		}
-
-		swapGrids();
+		Map<GridPoint, Integer> neighbourCountByPosition = getNeighbourCountByPosition();
+		killCells(neighbourCountByPosition);
+		spawnCells(neighbourCountByPosition);
 
 		if(listener != null)
 			listener.update();
 	}
 
-	private void calculateNextGenCell(int x, int y) {
-		int neighbourCount = getNeighbourCount(x, y);
-		if(isCellAlive(x, y)) {
-			nextGenGrid[x][y] = neighbourCount == 2 || neighbourCount == 3;
-		} else {
-			nextGenGrid[x][y] = neighbourCount == 3;
+	private Map<GridPoint, Integer> getNeighbourCountByPosition() {
+		Map<GridPoint, Integer> neighbourCountByPosition = new HashMap<>();
+
+		for (GridPoint aliveCell : grid.getAliveCells()) {
+			forEachNeighborOf(aliveCell, (x, y) -> {
+				GridPoint key = new GridPoint(x, y);
+				int currentNeighbourCount = neighbourCountByPosition.getOrDefault(key, 0);
+				neighbourCountByPosition.put(key, currentNeighbourCount + 1);
+			});
 		}
+
+		return neighbourCountByPosition;
 	}
 
-	private int getNeighbourCount(int x, int y) {
-		int neighbourCount = 0;
-
-		// TODO: move the min max logic to isCellAlive
-		for(int x1 = Math.max(0, x - 1); x1 <= Math.min(x + 1, getWidth() - 1); x1++) {
-			for(int y1 = Math.max(0, y - 1); y1 <= Math.min(y + 1, getHeight() - 1); y1++) {
-				if(!(x1 == x && y1 == y) && isCellAlive(x1, y1))
-					neighbourCount++;
+	private void forEachNeighborOf(GridPoint point, BiConsumer<Integer, Integer> consumer) {
+		for(int x = point.x - 1; x <= point.x + 1; x++) {
+			for (int y = point.y - 1; y <= point.y + 1; y++) {
+				if(point.x != x || point.y != y) {
+					consumer.accept(x, y);
+				}
 			}
 		}
-
-		return neighbourCount;
 	}
 
-	private void swapGrids() {
-		boolean[][] temp = grid;
-		grid = nextGenGrid;
-		nextGenGrid = temp;
+	private void killCells(Map<GridPoint, Integer> neighbourCountByPosition) {
+		List<GridPoint> dyingCells = grid.getAliveCells().stream()
+				.filter(point -> isCellDying(point, neighbourCountByPosition))
+				.collect(Collectors.toList());
+
+		grid.set(dyingCells, false);
 	}
 
-	public int getWidth() {
-		return grid.length;
+	private boolean isCellDying(GridPoint point, Map<GridPoint, Integer> neighbourCountByPosition) {
+		int neighbourCount = neighbourCountByPosition.getOrDefault(point, 0);
+		return neighbourCount < 2 || neighbourCount > 3;
 	}
 
-	public int getHeight() {
-		return grid[0].length;
+	private void spawnCells(Map<GridPoint, Integer> neighbourCountByPosition) {
+		List<GridPoint> spawningCells = neighbourCountByPosition.entrySet().stream()
+				.filter(entry -> entry.getValue() == 3)
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+
+		grid.set(spawningCells, true);
 	}
 
 	public void setListener(Listener listener) {
 		this.listener = listener;
+	}
+
+	public Set<GridPoint> getAliveCells() {
+		return grid.getAliveCells();
 	}
 }

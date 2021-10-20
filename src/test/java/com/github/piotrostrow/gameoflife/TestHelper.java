@@ -1,6 +1,7 @@
 package com.github.piotrostrow.gameoflife;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
+import com.github.piotrostrow.gameoflife.io.FileUtils;
 
 import java.io.File;
 import java.net.URL;
@@ -23,22 +24,13 @@ public class TestHelper {
 		}
 	}
 
+	public static GameOfLife loadFromFile(String fileName) {
+		return FileUtils.load(getFile(fileName));
+	}
+
 	public static File getFile(String fileName) {
 		URL resourceURL = TestHelper.class.getClassLoader().getResource(fileName);
 		assertThat(resourceURL).isNotNull();
 		return new File(resourceURL.getFile());
-	}
-
-	public static void assertGridEquals(GameOfLife actual, GameOfLife expected) {
-		assertThat(actual.getWidth()).isEqualTo(expected.getWidth());
-		assertThat(actual.getHeight()).isEqualTo(expected.getHeight());
-
-		for (int x = 0; x < actual.getWidth(); x++) {
-			for (int y = 0; y < actual.getHeight(); y++) {
-				assertThat(actual.isCellAlive(x, y))
-						.as("cell %d, %d", x, y)
-						.isEqualTo(expected.isCellAlive(x, y));
-			}
-		}
 	}
 }

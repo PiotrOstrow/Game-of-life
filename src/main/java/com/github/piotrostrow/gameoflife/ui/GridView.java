@@ -15,7 +15,7 @@ public class GridView {
 	public GridView(GameOfLife gameOfLife) {
 		this.gameOfLife = gameOfLife;
 		this.gridPane = new GridPane();
-		this.gridCells = new GridCell[gameOfLife.getWidth()][gameOfLife.getHeight()];
+		this.gridCells = new GridCell[39][21];
 
 		initGrid(gameOfLife);
 
@@ -27,8 +27,8 @@ public class GridView {
 		gridPane.setHgap(1);
 		gridPane.setVgap(1);
 
-		for(int x = 0; x < gameOfLife.getWidth(); x++) {
-			for(int y = 0; y < gameOfLife.getHeight(); y++) {
+		for(int x = 0; x < getGridWidth(); x++) {
+			for(int y = 0; y < getGridHeight(); y++) {
 				GridCell gridCell = new GridCell(x, y);
 				gridCell.asNode().setOnMouseClicked(e -> onCellClick(gridCell));
 				addGridCell(gridCell, x, y);
