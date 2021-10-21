@@ -2,17 +2,19 @@ package com.github.piotrostrow.gameoflife.ui;
 
 import com.github.piotrostrow.gameoflife.controller.Controller;
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
 public class GameView {
 
-	private GridPane parent;
+	private final BorderPane parent = new BorderPane();
 
 	private Button nextGenerationButton;
 	private Button loadFileButton;
@@ -26,28 +28,50 @@ public class GameView {
 	}
 
 	private void initView(GameOfLife game) {
-		parent = new GridPane();
-		parent.setHgap(10);
-		parent.setVgap(10);
-		parent.setPadding(new Insets(20));
-		parent.setAlignment(Pos.CENTER);
-
 		GridView gridView = new GridView(game);
+
+		parent.setTop(createTopPane());
+		parent.setCenter(gridView.asNode());
+		parent.setBottom(createBottomPane());
+	}
+
+	private GridPane createTopPane() {
+		GridPane topGridPane = createNewGridPane();
 
 		nextGenerationButton = new Button("Next generation");
 		loadFileButton = new Button("Load from file");
 		saveFileButton = new Button("Save to file");
 		playButton = new Button("Play");
 
-		speedSlider = new Slider(1, 60, 1);
+		topGridPane.add(nextGenerationButton, 0, 0);
+		topGridPane.add(playButton, 1, 0);
+		topGridPane.add(loadFileButton, 2, 0);
+		topGridPane.add(saveFileButton, 3, 0);
 
-		parent.add(new Label("Game of life"), 0, 0);
-		parent.add(gridView.asNode(), 0, 1);
-		parent.add(nextGenerationButton, 0, 2);
-		parent.add(loadFileButton, 0, 3);
-		parent.add(saveFileButton, 0, 4);
-		parent.add(playButton, 0, 5);
-		parent.add(speedSlider, 0, 6);
+		return topGridPane;
+	}
+
+	private GridPane createBottomPane() {
+		GridPane bottomGridPane = createNewGridPane();
+
+		speedSlider = new Slider(1, 60, 1);
+		speedSlider.setPrefWidth(500);
+
+		Label sliderLabel = new Label("Autoplay speed");
+		GridPane.setHalignment(sliderLabel, HPos.CENTER);
+
+		bottomGridPane.add(sliderLabel, 0, 0);
+		bottomGridPane.add(speedSlider, 0, 1);
+		return bottomGridPane;
+	}
+
+	private GridPane createNewGridPane() {
+		GridPane gridPane = new GridPane();
+		gridPane.setHgap(10);
+		gridPane.setVgap(10);
+		gridPane.setPadding(new Insets(20));
+		gridPane.setAlignment(Pos.CENTER);
+		return gridPane;
 	}
 
 	public void setupController(Controller controller) {
