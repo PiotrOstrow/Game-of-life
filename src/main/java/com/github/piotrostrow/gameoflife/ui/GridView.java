@@ -72,8 +72,16 @@ public class GridView {
 
 	private void setCellFromMouseEvent(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.SECONDARY) {
-			int x = (int) ((event.getX() - canvasXOffset) / scale) / CELL_SIZE;
-			int y = (int) ((event.getY() - canvasYOffset) / scale) / CELL_SIZE;
+			double xd = (event.getX() - canvasXOffset) / scale;
+			double yd = (event.getY() - canvasYOffset) / scale;
+
+			if(xd < 0)
+				xd -= CELL_SIZE;
+			if(yd < 0)
+				yd -= CELL_SIZE;
+
+			int x = (int) (xd / CELL_SIZE);
+			int y = (int) (yd / CELL_SIZE);
 
 			gameOfLife.setCell(x, y, event.getButton() == MouseButton.PRIMARY);
 			draw();
@@ -81,13 +89,26 @@ public class GridView {
 	}
 
 	private void onScroll(ScrollEvent event) {
-		double delta = event.getDeltaY() / Math.abs(event.getDeltaY()) / 10;
+		double delta = event.getDeltaY() / Math.abs(event.getDeltaY()) / 20	;
 		if (!Double.isNaN(delta)) {
-			scale = Math.max(0.1, scale + delta);
-			scale = Math.min(1.0, scale);
+			double scaleBefore = scale;
+			scale = Math.min(1.0, Math.max(0.1, scale + delta));
+
+			adjustTranslationToCursorAfterZoom(event, scaleBefore);
 
 			draw();
 		}
+	}
+
+	private void adjustTranslationToCursorAfterZoom(ScrollEvent event, double scaleBefore) {
+		double x = ((event.getX() - canvasXOffset) / scaleBefore);
+		double y = ((event.getY() - canvasYOffset) / scaleBefore);
+
+		double x2 = ((event.getX() - canvasXOffset) / scale);
+		double y2 = ((event.getY() - canvasYOffset) / scale);
+
+		canvasXOffset += (x2 - x) * scale;
+		canvasYOffset += (y2 - y) * scale;
 	}
 
 	private void draw() {
@@ -97,6 +118,7 @@ public class GridView {
 		clearCanvas(g);
 		drawAliveCells(g);
 		drawGrid(g);
+		drawAxes(g);
 	}
 
 	private void updateTransform(GraphicsContext g) {
@@ -129,8 +151,13 @@ public class GridView {
 		}
 	}
 
+	private void drawAxes(GraphicsContext g) {
+		g.setStroke(Color.BLACK);
+		g.strokeLine(0, -canvasYOffset / scale, 0, (canvas.getHeight() - canvasYOffset) / scale);
+		g.strokeLine(-canvasXOffset / scale, 0, (canvas.getWidth() - canvasXOffset) / scale, 0);
+	}
+
 	public Node asNode() {
 		return new ResizableCanvasContainer(canvas);
 	}
-
 }

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 
 public class Grid {
 
@@ -20,13 +19,19 @@ public class Grid {
 	}
 
 	public void set(GridPoint position, boolean alive) {
-		Function<GridPoint, Boolean> method = alive ? aliveCells::add : aliveCells::remove;
-		method.apply(position);
+		if(alive) {
+			aliveCells.add(position);
+		} else {
+			aliveCells.remove(position);
+		}
 	}
 
 	public void set(Collection<GridPoint> points, boolean alive) {
-		Function<Collection<GridPoint>, Boolean> method = alive ? aliveCells::addAll : aliveCells::removeAll;
-		method.apply(points);
+		if(alive) {
+			aliveCells.addAll(points);
+		} else {
+			aliveCells.removeAll(points);
+		}
 	}
 
 	public boolean get(int x, int y) {

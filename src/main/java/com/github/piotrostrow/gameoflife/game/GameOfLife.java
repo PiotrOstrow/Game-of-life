@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GameOfLife {
@@ -12,6 +12,7 @@ public class GameOfLife {
 	public interface Listener {
 		void update();
 	}
+
 	private final Grid grid;
 
 	private Listener listener;
@@ -37,7 +38,7 @@ public class GameOfLife {
 
 	public void calculateNextGeneration() {
 		Map<GridPoint, Integer> neighbourCountByPosition = getNeighbourCountByPosition();
-		killCells(neighbourCountByPosition);
+		killDyingCells(neighbourCountByPosition);
 		spawnCells(neighbourCountByPosition);
 
 		if(listener != null)
@@ -48,27 +49,26 @@ public class GameOfLife {
 		Map<GridPoint, Integer> neighbourCountByPosition = new HashMap<>();
 
 		for (GridPoint aliveCell : grid.getAliveCells()) {
-			forEachNeighborOf(aliveCell, (x, y) -> {
-				GridPoint key = new GridPoint(x, y);
-				int currentNeighbourCount = neighbourCountByPosition.getOrDefault(key, 0);
-				neighbourCountByPosition.put(key, currentNeighbourCount + 1);
+			forEachNeighborOf(aliveCell, point -> {
+				int currentNeighbourCount = neighbourCountByPosition.getOrDefault(point, 0);
+				neighbourCountByPosition.put(point, currentNeighbourCount + 1);
 			});
 		}
 
 		return neighbourCountByPosition;
 	}
 
-	private void forEachNeighborOf(GridPoint point, BiConsumer<Integer, Integer> consumer) {
+	private void forEachNeighborOf(GridPoint point, Consumer<GridPoint> consumer) {
 		for(int x = point.x - 1; x <= point.x + 1; x++) {
 			for (int y = point.y - 1; y <= point.y + 1; y++) {
 				if(point.x != x || point.y != y) {
-					consumer.accept(x, y);
+					consumer.accept(new GridPoint(x, y));
 				}
 			}
 		}
 	}
 
-	private void killCells(Map<GridPoint, Integer> neighbourCountByPosition) {
+	private void killDyingCells(Map<GridPoint, Integer> neighbourCountByPosition) {
 		List<GridPoint> dyingCells = grid.getAliveCells().stream()
 				.filter(point -> isCellDying(point, neighbourCountByPosition))
 				.collect(Collectors.toList());
