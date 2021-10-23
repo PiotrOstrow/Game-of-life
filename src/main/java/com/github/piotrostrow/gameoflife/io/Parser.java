@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Parser {
 
-	private static final Pattern pattern = Pattern.compile("^\\s*(?<row>[.*]+).*$", Pattern.MULTILINE);
+	private static final Pattern PATTERN = Pattern.compile("^\\s*(?<row>[.*]+).*$", Pattern.MULTILINE);
 
 	public static final char ALIVE = '*';
 	public static final char DEAD = '.';
@@ -37,7 +37,7 @@ public class Parser {
 	}
 
 	private void extractRows() {
-		Matcher matcher = pattern.matcher(input);
+		Matcher matcher = PATTERN.matcher(input);
 
 		while (matcher.find()) {
 			rows.add(matcher.group("row"));
