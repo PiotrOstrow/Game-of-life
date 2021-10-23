@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class RLEFormatParser {
 
-	private static final Pattern LINE_PATTERN = Pattern.compile("^(?<input>[\\dbo](((\\d+)?[bo]?)+\\$?)+!?).*", Pattern.MULTILINE);
+	private static final Pattern LINE_PATTERN = Pattern.compile("^(?<input>[\\dbo$!](((\\d+)?[bo]?)+\\$?)+!?).*", Pattern.MULTILINE);
 	private static final Pattern DISCARD_AFTER_EXCLAMATION_MARK = Pattern.compile("(?<validInput>[^!]*!).*");
 	private static final Pattern ROW_PATTERN = Pattern.compile("(?<row>((\\d+)?[bo]?)+[$!])");
 	private static final Pattern COUNT_TAG_PATTERN = Pattern.compile("(?<count>\\d+)?(?<tag>[bo])");

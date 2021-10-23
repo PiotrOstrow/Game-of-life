@@ -111,4 +111,19 @@ class RLEFormatParserTest {
 
 		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
 	}
+
+	@Test
+	void testInputLineStartsWithEndOfRowCharacter() {
+		String input = getInputFromFile("parser_tests/RLE/test_line_starts_with_end_of_row_character.rle");
+		RLEFormatParser parser = new RLEFormatParser(input);
+
+		GameOfLife actual = parser.parse();
+
+		GameOfLife expected = new GameOfLife();
+		expected.setCell(0, 0, true);
+		expected.setCell(0, 1, true);
+		expected.setCell(2, 1, true);
+
+		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
+	}
 }
