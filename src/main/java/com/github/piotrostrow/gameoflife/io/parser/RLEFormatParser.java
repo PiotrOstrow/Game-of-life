@@ -1,11 +1,11 @@
-package com.github.piotrostrow.gameoflife.io;
+package com.github.piotrostrow.gameoflife.io.parser;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RLEFormatParser {
+public class RLEFormatParser implements Parser{
 
 	private static final Pattern LINE_PATTERN = Pattern.compile("^(?<input>[\\dbo$!](((\\d+)?[bo]?)+\\$?)+!?).*", Pattern.MULTILINE);
 	private static final Pattern DISCARD_AFTER_EXCLAMATION_MARK = Pattern.compile("(?<validInput>[^!]*!).*");
@@ -25,6 +25,7 @@ public class RLEFormatParser {
 		this.input = input;
 	}
 
+	@Override
 	public GameOfLife parse() {
 		String rowsAsSingleLineString = extractRowsAsSingleLineString();
 		Matcher rowMatcher = ROW_PATTERN.matcher(rowsAsSingleLineString);
@@ -50,10 +51,10 @@ public class RLEFormatParser {
 	}
 
 	private void parseRow(String row) {
-		Matcher runCountMatcher = COUNT_TAG_PATTERN.matcher(row);
-		while(runCountMatcher.find()) {
-			String tag = runCountMatcher.group("tag");
-			String countString = runCountMatcher.group("count");
+		Matcher runCountTagMatcher = COUNT_TAG_PATTERN.matcher(row);
+		while(runCountTagMatcher.find()) {
+			String tag = runCountTagMatcher.group("tag");
+			String countString = runCountTagMatcher.group("count");
 			parseTag(tag, countString);
 		}
 
@@ -61,7 +62,7 @@ public class RLEFormatParser {
 	}
 
 	private void parseTag(String tag, String countString) {
-		int count = parseIntOrDefault(countString, 1);
+		int count = parseIntOrOne(countString);
 		if (tag.equals(ALIVE)){
 			for(int i = 0; i < count; i++)  {
 				gameOfLife.setCell(currentColumn + i, currentRow, true);
@@ -74,15 +75,15 @@ public class RLEFormatParser {
 		Matcher rowEndMatcher = ROW_END_MATCHER.matcher(row);
 		if (rowEndMatcher.find()) {
 			String countString = rowEndMatcher.group("count");
-			currentRow += parseIntOrDefault(countString, 1);
+			currentRow += parseIntOrOne(countString);
 		}
 		currentColumn = 0;
 	}
 
-	private static int parseIntOrDefault(String input, int defaultValue) {
+	private static int parseIntOrOne(String input) {
 		// No need to check if it's a valid integer cus the value matched the pattern, can only possibly be null otherwise
 		if(input == null) {
-			return defaultValue;
+			return 1;
 		}
 		return Integer.parseInt(input);
 	}

@@ -1,4 +1,4 @@
-package com.github.piotrostrow.gameoflife.io;
+package com.github.piotrostrow.gameoflife.io.parser;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Parser {
+public class VisualFormatParser implements Parser{
 
 	private static final Pattern PATTERN = Pattern.compile("^\\s*(?<row>[.*]+).*$", Pattern.MULTILINE);
 
@@ -18,13 +18,14 @@ public class Parser {
 	private final List<String> rows = new ArrayList<>();
 	private final GameOfLife gameOfLife = new GameOfLife();
 
-	public Parser(String input) {
+	public VisualFormatParser(String input) {
 		this.input = input;
 	}
 
 	/**
 	 * @throws IllegalArgumentException if the input string has no valid rows
 	 */
+	@Override
 	public GameOfLife parse() {
 		if (rows.size() != 0) {
 			throw new IllegalStateException("Input has already been parsed");

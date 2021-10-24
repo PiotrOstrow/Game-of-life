@@ -1,4 +1,4 @@
-package com.github.piotrostrow.gameoflife.io;
+package com.github.piotrostrow.gameoflife.io.parser;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ class RLEFormatParserTest {
 	@Test
 	void testInputWithHeaderOneAliveCellAtOrigin() {
 		String input = getInputFromFile("parser_tests/RLE/test_one_alive_cell.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 
@@ -24,7 +24,7 @@ class RLEFormatParserTest {
 	@Test
 	void testInputWithDeadAndAliveCellsInterleavedInSingleRow() {
 		String input = getInputFromFile("parser_tests/RLE/test_dead_and_alive_interleaved.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 
@@ -38,7 +38,7 @@ class RLEFormatParserTest {
 	@Test
 	void testInputWithMultipleAliveAndDeadCellsInSequenceWithSomeSpecifiedInRunCount() {
 		String input = getInputFromFile("parser_tests/RLE/test_dead_and_alive_interleaved_with_run_count.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 
@@ -55,7 +55,7 @@ class RLEFormatParserTest {
 	@Test
 	void testInputWithMultipleRows() {
 		String input = getInputFromFile("parser_tests/RLE/test_input_with_multiple_rows.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 
@@ -72,7 +72,7 @@ class RLEFormatParserTest {
 	@Test
 	void testInputWithRowSeparatedByNewLineCharacter() {
 		String input = getInputFromFile("parser_tests/RLE/test_row_with_new_line_character.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 
@@ -88,7 +88,7 @@ class RLEFormatParserTest {
 	@Test
 	void testSkipMultipleRows() {
 		String input = getInputFromFile("parser_tests/RLE/test_skip_multiple_rows.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 
@@ -102,7 +102,7 @@ class RLEFormatParserTest {
 	@Test
 	void testIgnoreEverythingAfterExclamationMark() {
 		String input = getInputFromFile("parser_tests/RLE/test_exclamation_mark.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 
@@ -115,7 +115,7 @@ class RLEFormatParserTest {
 	@Test
 	void testInputLineStartsWithEndOfRowCharacter() {
 		String input = getInputFromFile("parser_tests/RLE/test_line_starts_with_end_of_row_character.rle");
-		RLEFormatParser parser = new RLEFormatParser(input);
+		Parser parser = new RLEFormatParser(input);
 
 		GameOfLife actual = parser.parse();
 

@@ -1,6 +1,7 @@
 package com.github.piotrostrow.gameoflife.controller;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
+import com.github.piotrostrow.gameoflife.io.FileFormat;
 import com.github.piotrostrow.gameoflife.io.FileUtils;
 import com.github.piotrostrow.gameoflife.ui.GameView;
 import javafx.animation.Animation;
@@ -14,6 +15,9 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Controller {
 
@@ -74,10 +78,23 @@ public class Controller {
 
 	private FileChooser newFileChooser(String title) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text file", "*.txt"));
+		fileChooser.getExtensionFilters().addAll(getExtensionFilters());
 		fileChooser.setInitialDirectory(Paths.get(".").toFile());
 		fileChooser.setTitle(title);
 		return fileChooser;
+	}
+
+	private FileChooser.ExtensionFilter[] getExtensionFilters() {
+		List<FileChooser.ExtensionFilter> filters = Arrays.stream(FileFormat.values())
+				.map(e -> new FileChooser.ExtensionFilter(e.getDescription(), "*." + e.getExtension()))
+				.collect(Collectors.toList());
+
+		String[] allFileExtensions = Arrays.stream(FileFormat.values())
+				.map(e -> "*." + e.getExtension())
+				.toArray(String[]::new);
+		filters.add(0, new FileChooser.ExtensionFilter("Supported formats", allFileExtensions));
+
+		return filters.toArray(new FileChooser.ExtensionFilter[0]);
 	}
 
 	private void showErrorAlert(String message) {

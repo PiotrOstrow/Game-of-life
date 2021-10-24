@@ -1,4 +1,4 @@
-package com.github.piotrostrow.gameoflife.io;
+package com.github.piotrostrow.gameoflife.io.parser;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import org.junit.jupiter.api.Test;
@@ -7,12 +7,12 @@ import static com.github.piotrostrow.gameoflife.TestHelper.getInputFromFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ParserTest {
+class VisualFormatParserTest {
 
 	@Test
 	void testInputWithComments() {
-		String input = getInputFromFile("parser_tests/test_comments.txt");
-		Parser parser = new Parser(input);
+		String input = getInputFromFile("parser_tests/visual_format/test_comments.txt");
+		Parser parser = new VisualFormatParser(input);
 		GameOfLife actual = parser.parse();
 
 		GameOfLife expected = new GameOfLife();
@@ -29,7 +29,7 @@ class ParserTest {
 
 	@Test
 	void testInputWithInvalidCharacterBeforeRowShouldIgnoreRowExceptWhitespace() {
-		Parser parser = new Parser(getInputFromFile("parser_tests/test_invalid_char_before_row.txt"));
+		Parser parser = new VisualFormatParser(getInputFromFile("parser_tests/visual_format/test_invalid_char_before_row.txt"));
 		GameOfLife actual = parser.parse();
 
 		GameOfLife expected = new GameOfLife();
@@ -44,7 +44,7 @@ class ParserTest {
 
 	@Test
 	void testInputWithUnevenDimensionsShouldHaveWidthOfRowWithMaxWidth() {
-		Parser parser = new Parser(getInputFromFile("parser_tests/test_uneven_dimensions.txt"));
+		Parser parser = new VisualFormatParser(getInputFromFile("parser_tests/visual_format/test_uneven_dimensions.txt"));
 		GameOfLife actual = parser.parse();
 
 		GameOfLife expected = new GameOfLife();
@@ -58,7 +58,7 @@ class ParserTest {
 
 	@Test
 	void testInputWithNoValidRowsShouldThrowIllegalArgumentException() {
-		Parser parser = new Parser("no valid rows here\njust some text");
+		Parser parser = new VisualFormatParser("no valid rows here\njust some text");
 		assertThatThrownBy(parser::parse).isInstanceOf(IllegalArgumentException.class);
 	}
 }

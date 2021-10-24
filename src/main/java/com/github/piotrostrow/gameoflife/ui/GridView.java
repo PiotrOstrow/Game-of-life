@@ -71,7 +71,7 @@ public class GridView {
 	}
 
 	private void setCellFromMouseEvent(MouseEvent event) {
-		if (event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.SECONDARY) {
+		if (event.getButton() == MouseButton.PRIMARY) {
 			double xd = (event.getX() - canvasXOffset) / scale;
 			double yd = (event.getY() - canvasYOffset) / scale;
 
@@ -83,7 +83,7 @@ public class GridView {
 			int x = (int) (xd / CELL_SIZE);
 			int y = (int) (yd / CELL_SIZE);
 
-			gameOfLife.setCell(x, y, event.getButton() == MouseButton.PRIMARY);
+			gameOfLife.setCell(x, y, true);
 			draw();
 		}
 	}

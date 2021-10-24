@@ -1,15 +1,16 @@
-package com.github.piotrostrow.gameoflife.io;
+package com.github.piotrostrow.gameoflife.io.serializer;
 
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import com.github.piotrostrow.gameoflife.game.GridPoint;
+import com.github.piotrostrow.gameoflife.io.parser.VisualFormatParser;
 
 import java.util.Comparator;
 
-public class Serializer {
+public class VisualFormatSerializer implements Serializer{
 
-	private static final int DEFAULT_MAX = 4;
 
-	public static String serialize(GameOfLife gameOfLife) {
+	@Override
+	public String serialize(GameOfLife gameOfLife) {
 		StringBuilder stringBuilder = new StringBuilder();
 
 		int minX = findMinX(gameOfLife);
@@ -19,7 +20,7 @@ public class Serializer {
 
 		for(int y = minY; y <= maxY; y++) {
 			for(int x = minX; x <= maxX; x++) {
-				char character = gameOfLife.isCellAlive(x, y) ? Parser.ALIVE : Parser.DEAD;
+				char character = gameOfLife.isCellAlive(x, y) ? VisualFormatParser.ALIVE : VisualFormatParser.DEAD;
 				stringBuilder.append(character);
 			}
 			stringBuilder.append('\n');
@@ -39,7 +40,7 @@ public class Serializer {
 		return gameOfLife.getAliveCells().stream()
 				.map(GridPoint::getX)
 				.max(Comparator.naturalOrder())
-				.orElse(DEFAULT_MAX - 1);
+				.orElse(0);
 	}
 
 	private static int findMinY(GameOfLife gameOfLife) {
@@ -53,6 +54,6 @@ public class Serializer {
 		return gameOfLife.getAliveCells().stream()
 				.map(GridPoint::getY)
 				.max(Comparator.naturalOrder())
-				.orElse(DEFAULT_MAX - 1);
+				.orElse(0);
 	}
 }
