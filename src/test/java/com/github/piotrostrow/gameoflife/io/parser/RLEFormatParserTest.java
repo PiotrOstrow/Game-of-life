@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.github.piotrostrow.gameoflife.TestHelper.getInputFromFile;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RLEFormatParserTest {
 
@@ -125,5 +126,21 @@ class RLEFormatParserTest {
 		expected.setCell(2, 1, true);
 
 		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
+	}
+
+	@Test
+	void testInputWithoutTerminationShouldThrowException() {
+		String input = getInputFromFile("parser_tests/RLE/test_input_without_termination.rle");
+		Parser parser = new RLEFormatParser(input);
+
+		assertThatThrownBy(parser::parse).isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@Test
+	void testInputWithInvalidCharactersShouldThrowException() {
+		String input = getInputFromFile("parser_tests/RLE/test_input_with_invalid_characters.rle");
+		Parser parser = new RLEFormatParser(input);
+
+		assertThatThrownBy(parser::parse).isInstanceOf(IllegalArgumentException.class);
 	}
 }

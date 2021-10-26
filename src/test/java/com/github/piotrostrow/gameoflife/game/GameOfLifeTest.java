@@ -9,6 +9,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GameOfLifeTest {
 
 	@Test
+	void testEmptyGridShouldNotSpawnAnyCells() {
+		GameOfLife actual = new GameOfLife();
+
+		actual.calculateNextGeneration();
+		assertThat(actual.getAliveCells()).isEmpty();
+	}
+
+	@Test
+	void testOneAliveCellWithNoNeighboursShouldDie() {
+		GameOfLife actual = new GameOfLife();
+		actual.setCell(2, 2, true);
+		actual.calculateNextGeneration();
+
+		assertThat(actual.getAliveCells()).isEmpty();
+	}
+
+	@Test
+	void testMultipleAliveCellsWithNoNeighboursAllShouldDie() {
+		GameOfLife actual = loadFromFile("game_tests/test_underpopulated_input.txt");
+
+		actual.calculateNextGeneration();
+		assertThat(actual.getAliveCells()).isEmpty();
+	}
+
+	@Test
+	void testAliveCellWithTwoNeighboursShouldStayAlive() {
+		GameOfLife actual = new GameOfLife();
+		actual.setCell(1, 1, true);
+		actual.setCell(1, 0, true);
+		actual.setCell(2, 1, true);
+
+		actual.calculateNextGeneration();
+
+		assertThat(actual.isCellAlive(1, 1)).isTrue();
+	}
+
+	@Test
 	void testAliveCellWithThreeNeighboursShouldStayAlive() {
 		GameOfLife actual = loadFromFile("game_tests/test_alive_with_three_neighbours.txt");
 
@@ -17,17 +54,32 @@ class GameOfLifeTest {
 	}
 
 	@Test
-	void testDeadCellWithThreeNeighboursShouldBecomeAlive() {
-		GameOfLife actual = loadFromFile("game_tests/test_dead_cell_with_three_neighbours_gen00.txt");
-		GameOfLife expectedGen1 = loadFromFile("game_tests/test_dead_cell_with_three_neighbours_gen01.txt");
-
+	void testAliveCellWithFourNeighboursShouldDie() {
+		GameOfLife actual = loadFromFile("game_tests/test_alive_cell_with_four_neighbours.txt");
 		actual.calculateNextGeneration();
-		assertThat(actual.getAliveCells()).isEqualTo(expectedGen1.getAliveCells());
+
+		assertThat(actual.isCellAlive(1, 1)).isFalse();
 	}
 
 	@Test
-	void testAliveCellsWithMoreThanThreeNeighboursShouldDie() {
-		GameOfLife actual = loadFromFile("game_tests/test_alive_with_more_than_three_neighbours.txt");
+	void testDeadCellWithThreeNeighboursShouldBecomeAlive() {
+		GameOfLife actual = loadFromFile("game_tests/test_dead_cell_with_three_neighbours.txt");
+
+		actual.calculateNextGeneration();
+		assertThat(actual.isCellAlive(7, 3)).isTrue();
+	}
+
+	@Test
+	void testDeadCellWithFourNeighboursShouldNotBecomeAlive() {
+		GameOfLife actual = loadFromFile("game_tests/test_dead_cell_with_four_neighbours.txt");
+		actual.calculateNextGeneration();
+
+		assertThat(actual.isCellAlive(1, 1)).isFalse();
+	}
+
+	@Test
+	void testAliveCellsWithFourNeighboursShouldDie() {
+		GameOfLife actual = loadFromFile("game_tests/test_alive_with_four_neighbours.txt");
 
 		actual.calculateNextGeneration();
 		assertThat(actual.isCellAlive(1, 1)).isFalse();
@@ -42,24 +94,6 @@ class GameOfLifeTest {
 		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
 
 		actual.calculateNextGeneration();
-		actual.calculateNextGeneration();
-		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
-	}
-
-	@Test
-	void testUnderpopulatedCellsAllShouldDieInNextGeneration() {
-		GameOfLife actual = loadFromFile("game_tests/test_underpopulated_input.txt");
-		GameOfLife expected = loadFromFile("game_tests/test_underpopulated_expected.txt");
-
-		actual.calculateNextGeneration();
-		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
-	}
-
-	@Test
-	void testEmptyGridShouldNotSpawnAnyCells() {
-		GameOfLife actual = loadFromFile("game_tests/test_empty_grid.txt");
-		GameOfLife expected = loadFromFile("game_tests/test_empty_grid.txt");
-
 		actual.calculateNextGeneration();
 		assertThat(actual.getAliveCells()).isEqualTo(expected.getAliveCells());
 	}

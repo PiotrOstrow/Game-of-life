@@ -47,7 +47,7 @@ public class RLEFormatParser implements Parser{
 				.map(DISCARD_AFTER_EXCLAMATION_MARK::matcher)
 				.filter(Matcher::find)
 				.map(matcher -> matcher.group("validInput"))
-				.orElse("");
+				.orElseThrow(() -> new IllegalArgumentException("Invalid input string"));
 	}
 
 	private void parseRow(String row) {
