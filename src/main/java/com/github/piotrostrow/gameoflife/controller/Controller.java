@@ -32,12 +32,16 @@ public class Controller {
 		this.gameOfLife = gameOfLife;
 		this.gameView = gameView;
 
-		this.autoPlayTimeline = new Timeline(new KeyFrame(Duration.millis(500), e -> gameOfLife.calculateNextGeneration()));
+		this.autoPlayTimeline = new Timeline(new KeyFrame(Duration.millis(500), e -> {
+			gameOfLife.calculateNextGeneration();
+			gameView.draw();
+		}));
 		this.autoPlayTimeline.setCycleCount(Timeline.INDEFINITE);
 	}
 
 	public void onNextGen(ActionEvent actionEvent) {
 		gameOfLife.calculateNextGeneration();
+		gameView.draw();
 	}
 
 	public void onLoadGame(ActionEvent actionEvent) {

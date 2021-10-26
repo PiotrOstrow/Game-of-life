@@ -35,8 +35,6 @@ public class GridView {
 
 		initMouseListeners();
 
-		gameOfLife.setListener(this::draw);
-
 		draw();
 	}
 
@@ -111,7 +109,7 @@ public class GridView {
 		canvasYOffset += (y2 - y) * scale;
 	}
 
-	private void draw() {
+	void draw() {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 
 		updateTransform(g);

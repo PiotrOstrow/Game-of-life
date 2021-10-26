@@ -16,6 +16,8 @@ public class GameView {
 
 	private final BorderPane parent = new BorderPane();
 
+	private final GridView gridView;
+
 	private Button nextGenerationButton;
 	private Button loadFileButton;
 	private Button saveFileButton;
@@ -24,11 +26,7 @@ public class GameView {
 	private Slider speedSlider;
 
 	public GameView(GameOfLife game) {
-		initView(game);
-	}
-
-	private void initView(GameOfLife game) {
-		GridView gridView = new GridView(game);
+		gridView = new GridView(game);
 
 		parent.setTop(createTopPane());
 		parent.setCenter(gridView.asNode());
@@ -80,6 +78,10 @@ public class GameView {
 		saveFileButton.setOnAction(controller::onSaveGame);
 		playButton.setOnAction(controller::onPlay);
 		speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> controller.onChangeSpeed(newValue));
+	}
+
+	public void draw() {
+		gridView.draw();
 	}
 
 	public void togglePlayButton() {

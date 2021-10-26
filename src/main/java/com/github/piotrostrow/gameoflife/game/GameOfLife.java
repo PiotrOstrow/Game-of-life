@@ -9,13 +9,7 @@ import java.util.stream.Collectors;
 
 public class GameOfLife {
 
-	public interface Listener {
-		void update();
-	}
-
 	private final Grid grid;
-
-	private Listener listener;
 
 	public GameOfLife() {
 		this.grid = new Grid();
@@ -23,9 +17,6 @@ public class GameOfLife {
 
 	public void setCells(GameOfLife other) {
 		this.grid.set(other.grid);
-
-		if(listener != null)
-			listener.update();
 	}
 
 	public void setCell(int x, int y, boolean alive) {
@@ -40,9 +31,6 @@ public class GameOfLife {
 		Map<GridPoint, Integer> neighbourCountByPosition = getNeighbourCountByPosition();
 		killDyingCells(neighbourCountByPosition);
 		spawnCells(neighbourCountByPosition);
-
-		if(listener != null)
-			listener.update();
 	}
 
 	private Map<GridPoint, Integer> getNeighbourCountByPosition() {
@@ -88,10 +76,6 @@ public class GameOfLife {
 				.collect(Collectors.toList());
 
 		grid.set(spawningCells, true);
-	}
-
-	public void setListener(Listener listener) {
-		this.listener = listener;
 	}
 
 	public Set<GridPoint> getAliveCells() {
