@@ -47,10 +47,10 @@ public class GameOfLife {
 	}
 
 	private void forEachNeighborOf(GridPoint point, Consumer<GridPoint> consumer) {
-		for(int x = point.x - 1; x <= point.x + 1; x++) {
-			for (int y = point.y - 1; y <= point.y + 1; y++) {
+		for(long x = Math.max(Integer.MIN_VALUE, point.x - 1L); x <= Math.min(Integer.MAX_VALUE, point.x + 1L); x++) {
+			for (long y = Math.max(Integer.MIN_VALUE, point.y - 1L); y <= Math.min(Integer.MAX_VALUE, point.y + 1L); y++) {
 				if(point.x != x || point.y != y) {
-					consumer.accept(new GridPoint(x, y));
+					consumer.accept(new GridPoint((int) x, (int) y));
 				}
 			}
 		}
