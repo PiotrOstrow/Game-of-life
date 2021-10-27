@@ -53,6 +53,7 @@ public class Controller {
 			try {
 				GameOfLife loadedGame = FileUtils.load(file);
 				gameOfLife.setCells(loadedGame);
+				gameView.draw();
 			} catch (RuntimeException e) {
 				showErrorAlert("Error loading the file: " + e.getMessage());
 			}
