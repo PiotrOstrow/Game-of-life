@@ -15,6 +15,8 @@ import java.nio.file.StandardOpenOption;
 
 public class FileUtils {
 
+	private FileUtils() { }
+
 	public static GameOfLife load(String path) {
 		return load(new File(path));
 	}

@@ -6,7 +6,7 @@ import com.github.piotrostrow.gameoflife.io.parser.VisualFormatParser;
 
 import java.util.Comparator;
 
-public class VisualFormatSerializer implements Serializer{
+public class VisualFormatSerializer implements Serializer {
 
 
 	@Override
@@ -18,8 +18,8 @@ public class VisualFormatSerializer implements Serializer{
 		int minY = findMinY(gameOfLife);
 		int maxY = findMaxY(gameOfLife);
 
-		for(int y = minY; y <= maxY; y++) {
-			for(int x = minX; x <= maxX; x++) {
+		for (int y = minY; y <= maxY; y++) {
+			for (int x = minX; x <= maxX; x++) {
 				char character = gameOfLife.isCellAlive(x, y) ? VisualFormatParser.ALIVE : VisualFormatParser.DEAD;
 				stringBuilder.append(character);
 			}

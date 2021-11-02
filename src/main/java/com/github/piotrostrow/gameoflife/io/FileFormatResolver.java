@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public class FileFormatResolver {
 
+	private FileFormatResolver() { }
+
 	/**
 	 * @return File format resolved from the file extension (for the time being)
 	 * @throws IllegalArgumentException if the file format is not supported or recognized

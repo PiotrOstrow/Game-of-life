@@ -62,8 +62,8 @@ public class RLEFormatSerializer implements Serializer {
 
 	private void ensureLineLength(int runCount) {
 		int length = 1;
-		if(runCount > 1) {
-			length += Math.ceil(Math.log10(runCount + 1));
+		if (runCount > 1) {
+			length += Math.ceil(Math.log10(runCount + 1.0));
 		}
 
 		if (currentLineLength + length > 70) {
@@ -76,7 +76,7 @@ public class RLEFormatSerializer implements Serializer {
 
 	private void serializeRow(List<GridPoint> row) {
 		int firstAliveCellColumn = row.get(0).getX();
-		if(firstAliveCellColumn > 0) {
+		if (firstAliveCellColumn > 0) {
 			appendTag(firstAliveCellColumn, DEAD);
 		}
 

@@ -7,7 +7,6 @@ import com.github.piotrostrow.gameoflife.ui.GameView;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -36,15 +35,16 @@ public class Controller {
 			gameOfLife.calculateNextGeneration();
 			gameView.draw();
 		}));
-		this.autoPlayTimeline.setCycleCount(Timeline.INDEFINITE);
+
+		this.autoPlayTimeline.setCycleCount(Animation.INDEFINITE);
 	}
 
-	public void onNextGen(ActionEvent actionEvent) {
+	public void onNextGen() {
 		gameOfLife.calculateNextGeneration();
 		gameView.draw();
 	}
 
-	public void onLoadGame(ActionEvent actionEvent) {
+	public void onLoadGame() {
 		pauseIfAutoPlaying();
 
 		File file = newFileChooser("Open save file").showOpenDialog(stage);
@@ -60,7 +60,7 @@ public class Controller {
 		}
 	}
 
-	public void onSaveGame(ActionEvent actionEvent) {
+	public void onSaveGame() {
 		pauseIfAutoPlaying();
 
 		File file = newFileChooser("Save to file").showSaveDialog(stage);
@@ -109,7 +109,7 @@ public class Controller {
 		alert.show();
 	}
 
-	public void onPlay(ActionEvent actionEvent) {
+	public void onPlay() {
 		if(autoPlayTimeline.getStatus() != Animation.Status.RUNNING) {
 			autoPlayTimeline.play();
 		} else {

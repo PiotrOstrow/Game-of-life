@@ -4,11 +4,12 @@ import com.github.piotrostrow.gameoflife.controller.Controller;
 import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import com.github.piotrostrow.gameoflife.io.FileUtils;
 import com.github.piotrostrow.gameoflife.ui.GameView;
+import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class Application extends javafx.application.Application {
+public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) {
@@ -18,9 +19,7 @@ public class Application extends javafx.application.Application {
 
 		view.setupController(controller);
 
-		final Scene scene = new Scene(view.asParent(), 1024, 720);
-
-		stage.setScene(scene);
+		stage.setScene(new Scene(view.asParent(), 1024, 720));
 		stage.initStyle(StageStyle.UNIFIED);
 		stage.setTitle("Game of life");
 		stage.show();

@@ -73,10 +73,10 @@ public class GameView {
 	}
 
 	public void setupController(Controller controller) {
-		nextGenerationButton.setOnAction(controller::onNextGen);
-		loadFileButton.setOnAction(controller::onLoadGame);
-		saveFileButton.setOnAction(controller::onSaveGame);
-		playButton.setOnAction(controller::onPlay);
+		nextGenerationButton.setOnAction(event -> controller.onNextGen());
+		loadFileButton.setOnAction(event -> controller.onLoadGame());
+		saveFileButton.setOnAction(event -> controller.onSaveGame());
+		playButton.setOnAction(event -> controller.onPlay());
 		speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> controller.onChangeSpeed(newValue));
 	}
 

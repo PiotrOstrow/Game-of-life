@@ -15,15 +15,18 @@ public class GridView {
 	private static final Color BACKGROUND_COLOR = Color.LIGHTBLUE;
 	private static final Color CELL_COLOR = Color.DARKGRAY;
 	private static final Color GRID_COLOR = Color.GRAY;
-	private static final int CELL_SIZE = 20;
+	private static final double CELL_SIZE = 20.0;
 
 	private final GameOfLife gameOfLife;
 
 	private final Canvas canvas = new Canvas();
 	private final Affine transform = new Affine();
 
-	private double canvasXOffset, canvasYOffset;
-	private double mouseDraggedX, mouseDraggedY;
+	private double canvasXOffset;
+	private double canvasYOffset;
+
+	private double mouseDraggedX;
+	private double mouseDraggedY;
 
 	private double scale = 1.0;
 

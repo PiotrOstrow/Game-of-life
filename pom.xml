@@ -45,21 +45,6 @@
             <version>15.0.1</version>
         </dependency>
         <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>11.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.kordamp.ikonli</groupId>
-            <artifactId>ikonli-javafx</artifactId>
-            <version>12.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.hansolo</groupId>
-            <artifactId>tilesfx</artifactId>
-            <version>11.48</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
@@ -94,7 +79,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.github.piotrostrow.gameoflife/com.github.piotrostrow.gameoflife.Application
+                                com.github.piotrostrow.gameoflife/com.github.piotrostrow.gameoflife.Main
                             </mainClass>
                         </configuration>
                     </execution>

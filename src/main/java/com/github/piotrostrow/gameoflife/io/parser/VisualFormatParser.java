@@ -27,7 +27,7 @@ public class VisualFormatParser implements Parser{
 	 */
 	@Override
 	public GameOfLife parse() {
-		if (rows.size() != 0) {
+		if (!rows.isEmpty()) {
 			throw new IllegalStateException("Input has already been parsed");
 		}
 
@@ -44,7 +44,7 @@ public class VisualFormatParser implements Parser{
 			rows.add(matcher.group("row"));
 		}
 
-		if (rows.size() == 0) {
+		if (rows.isEmpty()) {
 			throw new IllegalArgumentException("Input has no valid rows");
 		}
 	}
