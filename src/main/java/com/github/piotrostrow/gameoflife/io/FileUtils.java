@@ -1,12 +1,12 @@
 package com.github.piotrostrow.gameoflife.io;
 
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import com.github.piotrostrow.gameoflife.io.parser.Parser;
 import com.github.piotrostrow.gameoflife.io.parser.RLEFormatParser;
 import com.github.piotrostrow.gameoflife.io.parser.VisualFormatParser;
 import com.github.piotrostrow.gameoflife.io.serializer.RLEFormatSerializer;
 import com.github.piotrostrow.gameoflife.io.serializer.Serializer;
 import com.github.piotrostrow.gameoflife.io.serializer.VisualFormatSerializer;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
 
 import java.io.File;
 import java.io.IOException;

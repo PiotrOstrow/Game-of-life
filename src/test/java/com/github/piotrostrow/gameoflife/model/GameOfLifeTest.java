@@ -1,4 +1,4 @@
-package com.github.piotrostrow.gameoflife.game;
+package com.github.piotrostrow.gameoflife.model;
 
 import org.junit.jupiter.api.Test;
 

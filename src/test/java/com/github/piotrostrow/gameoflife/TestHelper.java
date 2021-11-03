@@ -1,7 +1,7 @@
 package com.github.piotrostrow.gameoflife;
 
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import com.github.piotrostrow.gameoflife.io.FileUtils;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
 
 import java.io.File;
 import java.net.URL;

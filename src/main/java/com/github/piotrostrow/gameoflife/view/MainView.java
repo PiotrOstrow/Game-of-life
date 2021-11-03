@@ -1,7 +1,8 @@
-package com.github.piotrostrow.gameoflife.ui;
+package com.github.piotrostrow.gameoflife.view;
 
 import com.github.piotrostrow.gameoflife.controller.Controller;
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
+import com.github.piotrostrow.gameoflife.controller.GridViewController;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,7 +13,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
-public class GameView {
+public class MainView {
 
 	private final BorderPane parent = new BorderPane();
 
@@ -25,7 +26,7 @@ public class GameView {
 
 	private Slider speedSlider;
 
-	public GameView(GameOfLife game) {
+	public MainView(GameOfLife game) {
 		gridView = new GridView(game);
 
 		parent.setTop(createTopPane());
@@ -72,7 +73,12 @@ public class GameView {
 		return gridPane;
 	}
 
-	public void setupController(Controller controller) {
+	public void setupControllers(Controller controller, GridViewController gridViewController) {
+		setupController(controller);
+		gridView.setupController(gridViewController);
+	}
+
+	private void setupController(Controller controller) {
 		nextGenerationButton.setOnAction(event -> controller.onNextGen());
 		loadFileButton.setOnAction(event -> controller.onLoadGame());
 		saveFileButton.setOnAction(event -> controller.onSaveGame());
@@ -94,5 +100,9 @@ public class GameView {
 
 	public Parent asParent() {
 		return parent;
+	}
+
+	public GridView getGridView() {
+		return gridView;
 	}
 }

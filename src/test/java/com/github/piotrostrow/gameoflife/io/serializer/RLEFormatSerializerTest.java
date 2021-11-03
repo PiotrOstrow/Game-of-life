@@ -1,6 +1,6 @@
 package com.github.piotrostrow.gameoflife.io.serializer;
 
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
 import org.junit.jupiter.api.Test;
 
 import java.util.regex.Matcher;

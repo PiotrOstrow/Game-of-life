@@ -1,13 +1,12 @@
 package com.github.piotrostrow.gameoflife.io.serializer;
 
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
-import com.github.piotrostrow.gameoflife.game.GridPoint;
 import com.github.piotrostrow.gameoflife.io.parser.VisualFormatParser;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
+import com.github.piotrostrow.gameoflife.model.GridPoint;
 
 import java.util.Comparator;
 
 public class VisualFormatSerializer implements Serializer {
-
 
 	@Override
 	public String serialize(GameOfLife gameOfLife) {

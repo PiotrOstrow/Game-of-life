@@ -1,9 +1,9 @@
 package com.github.piotrostrow.gameoflife.controller;
 
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
 import com.github.piotrostrow.gameoflife.io.FileFormat;
 import com.github.piotrostrow.gameoflife.io.FileUtils;
-import com.github.piotrostrow.gameoflife.ui.GameView;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
+import com.github.piotrostrow.gameoflife.view.MainView;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -22,18 +22,18 @@ public class Controller {
 
 	private final Stage stage;
 	private final GameOfLife gameOfLife;
-	private final GameView gameView;
+	private final MainView mainView;
 
 	private final Timeline autoPlayTimeline;
 
-	public Controller(Stage stage, GameOfLife gameOfLife, GameView gameView) {
+	public Controller(Stage stage, GameOfLife gameOfLife, MainView mainView) {
 		this.stage = stage;
 		this.gameOfLife = gameOfLife;
-		this.gameView = gameView;
+		this.mainView = mainView;
 
 		this.autoPlayTimeline = new Timeline(new KeyFrame(Duration.millis(500), e -> {
 			gameOfLife.calculateNextGeneration();
-			gameView.draw();
+			mainView.draw();
 		}));
 
 		this.autoPlayTimeline.setCycleCount(Animation.INDEFINITE);
@@ -41,7 +41,7 @@ public class Controller {
 
 	public void onNextGen() {
 		gameOfLife.calculateNextGeneration();
-		gameView.draw();
+		mainView.draw();
 	}
 
 	public void onLoadGame() {
@@ -53,7 +53,7 @@ public class Controller {
 			try {
 				GameOfLife loadedGame = FileUtils.load(file);
 				gameOfLife.setCells(loadedGame);
-				gameView.draw();
+				mainView.draw();
 			} catch (RuntimeException e) {
 				showErrorAlert("Error loading the file: " + e.getMessage());
 			}
@@ -77,7 +77,7 @@ public class Controller {
 	private void pauseIfAutoPlaying() {
 		if(autoPlayTimeline.getStatus() == Animation.Status.RUNNING) {
 			autoPlayTimeline.stop();
-			gameView.togglePlayButton();
+			mainView.togglePlayButton();
 		}
 	}
 
@@ -116,7 +116,7 @@ public class Controller {
 			autoPlayTimeline.stop();
 		}
 
-		gameView.togglePlayButton();
+		mainView.togglePlayButton();
 	}
 
 	public void onChangeSpeed(Number value) {

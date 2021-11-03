@@ -1,12 +1,10 @@
-package com.github.piotrostrow.gameoflife.ui;
+package com.github.piotrostrow.gameoflife.view;
 
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
+import com.github.piotrostrow.gameoflife.controller.GridViewController;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
@@ -15,7 +13,10 @@ public class GridView {
 	private static final Color BACKGROUND_COLOR = Color.LIGHTBLUE;
 	private static final Color CELL_COLOR = Color.DARKGRAY;
 	private static final Color GRID_COLOR = Color.GRAY;
-	private static final double CELL_SIZE = 20.0;
+
+	public static final double CELL_SIZE = 20.0;
+	public static final double MIN_SCALE = 0.1;
+	public static final double MAX_SCALE = 1.0;
 
 	private final GameOfLife gameOfLife;
 
@@ -25,9 +26,6 @@ public class GridView {
 	private double canvasXOffset;
 	private double canvasYOffset;
 
-	private double mouseDraggedX;
-	private double mouseDraggedY;
-
 	private double scale = 1.0;
 
 	public GridView(GameOfLife gameOfLife) {
@@ -36,83 +34,10 @@ public class GridView {
 		canvas.widthProperty().addListener(event -> draw());
 		canvas.heightProperty().addListener(event -> draw());
 
-		initMouseListeners();
-
 		draw();
 	}
 
-	private void initMouseListeners() {
-		canvas.setOnMousePressed(this::onMousePressed);
-		canvas.setOnMouseDragged(this::onMouseDragged);
-		canvas.setOnScroll(this::onScroll);
-	}
-
-	private void onMousePressed(MouseEvent event) {
-		mouseDraggedX = event.getX();
-		mouseDraggedY = event.getY();
-
-		setCellFromMouseEvent(event);
-	}
-
-	private void onMouseDragged(MouseEvent event) {
-		if (event.getButton() == MouseButton.SECONDARY) {
-			double deltaX = event.getX() - mouseDraggedX;
-			double deltaY = event.getY() - mouseDraggedY;
-
-			canvasXOffset += deltaX;
-			canvasYOffset += deltaY;
-
-			mouseDraggedX = event.getX();
-			mouseDraggedY = event.getY();
-
-			draw();
-		} else if(event.getButton() == MouseButton.PRIMARY) {
-			setCellFromMouseEvent(event);
-		}
-	}
-
-	private void setCellFromMouseEvent(MouseEvent event) {
-		if (event.getButton() == MouseButton.PRIMARY) {
-			double xd = (event.getX() - canvasXOffset) / scale;
-			double yd = (event.getY() - canvasYOffset) / scale;
-
-			if(xd < 0)
-				xd -= CELL_SIZE;
-			if(yd < 0)
-				yd -= CELL_SIZE;
-
-			int x = (int) (xd / CELL_SIZE);
-			int y = (int) (yd / CELL_SIZE);
-
-			gameOfLife.setCell(x, y, true);
-			draw();
-		}
-	}
-
-	private void onScroll(ScrollEvent event) {
-		double delta = event.getDeltaY() / Math.abs(event.getDeltaY()) / 20	;
-		if (!Double.isNaN(delta)) {
-			double scaleBefore = scale;
-			scale = Math.min(1.0, Math.max(0.1, scale + delta));
-
-			adjustTranslationToCursorAfterZoom(event, scaleBefore);
-
-			draw();
-		}
-	}
-
-	private void adjustTranslationToCursorAfterZoom(ScrollEvent event, double scaleBefore) {
-		double x = ((event.getX() - canvasXOffset) / scaleBefore);
-		double y = ((event.getY() - canvasYOffset) / scaleBefore);
-
-		double x2 = ((event.getX() - canvasXOffset) / scale);
-		double y2 = ((event.getY() - canvasYOffset) / scale);
-
-		canvasXOffset += (x2 - x) * scale;
-		canvasYOffset += (y2 - y) * scale;
-	}
-
-	void draw() {
+	public void draw() {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 
 		updateTransform(g);
@@ -156,6 +81,33 @@ public class GridView {
 		g.setStroke(Color.BLACK);
 		g.strokeLine(0, -canvasYOffset / scale, 0, (canvas.getHeight() - canvasYOffset) / scale);
 		g.strokeLine(-canvasXOffset / scale, 0, (canvas.getWidth() - canvasXOffset) / scale, 0);
+	}
+
+	public void setupController(GridViewController gridViewController) {
+		canvas.setOnMousePressed(gridViewController::onMousePressed);
+		canvas.setOnMouseDragged(gridViewController::onMouseDragged);
+		canvas.setOnScroll(gridViewController::onScroll);
+	}
+
+	public double getCanvasXOffset() {
+		return canvasXOffset;
+	}
+
+	public double getCanvasYOffset() {
+		return canvasYOffset;
+	}
+
+	public void translateBy(double x, double y) {
+		this.canvasXOffset += x;
+		this.canvasYOffset += y;
+	}
+
+	public double getScale() {
+		return scale;
+	}
+
+	public void setScale(double scale) {
+		this.scale = scale;
 	}
 
 	public Node asNode() {

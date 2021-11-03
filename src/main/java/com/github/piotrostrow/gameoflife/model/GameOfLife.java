@@ -1,4 +1,4 @@
-package com.github.piotrostrow.gameoflife.game;
+package com.github.piotrostrow.gameoflife.model;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.github.piotrostrow.gameoflife.io.parser;
 
-import com.github.piotrostrow.gameoflife.game.GameOfLife;
+import com.github.piotrostrow.gameoflife.model.GameOfLife;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

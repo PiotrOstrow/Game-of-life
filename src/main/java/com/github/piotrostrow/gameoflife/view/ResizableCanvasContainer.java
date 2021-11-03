@@ -1,4 +1,4 @@
-package com.github.piotrostrow.gameoflife.ui;
+package com.github.piotrostrow.gameoflife.view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
